@@ -1,0 +1,37 @@
+name: Install Heroku CLI
+description: Installs the Heroku CLI
+branding:
+  icon: 'chevron-right'
+  color: 'purple'
+runs:
+  using: "composite"
+  steps:
+    - name: Prepare for cache installation
+      if: ${{ runner.os == 'Linux' }}
+      run: |
+        # We need to modify the permissions of /bin/tar and ensure heroku install folder path exists to allow actions/cache to work properly
+        sudo chown root /bin/tar && sudo chmod u+s /bin/tar
+        sudo mkdir -p /usr/local/lib/heroku/bin
+
+        # Get current year and month to support cache key and ensure the cache is invalidated monthly.
+        echo "CURRENT_MONTH=$(date +'%Y-%m')" >> $GITHUB_ENV
+      shell: bash
+    - name: Restore cache
+      if: ${{ runner.os == 'Linux' }}
+      id: restore-heroku-cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          /usr/local/bin/heroku
+          /usr/local/lib/heroku/
+        key: ${{ runner.os }}-heroku-cli-${{ env.CURRENT_MONTH }}
+    - name: Download and install the CLI
+      if: ${{ steps.restore-heroku-cache.outputs.cache-hit != 'true' }}
+      run: curl https://cli-assets.heroku.com/install.sh | sh
+      shell: bash
+    - name: Cleanup
+      if: runner.os == 'Linux'
+      run: |
+        # Remove SUID bit for tar as it is no longer needed
+        sudo chmod u-s /bin/tar
+      shell: bash
