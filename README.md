@@ -11,7 +11,7 @@ installed.
 
 ## Authentication
 
-This action only installs the CLI and does authenticate a user.  You will still need to ensure you are authenticated before using the CLI.  You can do this by setting the `HEROKU_API_KEY` environment variable.
+This action only installs the CLI and does not authenticate a user.  You will still need to ensure you are authenticated before using the CLI.  You can do this by setting the `HEROKU_API_KEY` environment variable.
 
 ## Example usage
 
