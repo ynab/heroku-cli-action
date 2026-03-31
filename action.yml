@@ -19,7 +19,7 @@ runs:
     - name: Restore cache
       if: ${{ runner.os == 'Linux' }}
       id: restore-heroku-cache
-      uses: actions/cache@v4
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
         path: |
           /usr/local/bin/heroku
